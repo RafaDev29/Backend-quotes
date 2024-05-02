@@ -1,0 +1,17 @@
+# Directorio node_modules generado por npm/yarn
+node_modules/
+
+# Archivos de caché y registros de desarrollo
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de configuración locales
+.env
+
+
+# Archivos de respaldo y temporales
+*.swp
+*~
