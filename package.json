@@ -1,0 +1,16 @@
+{
+  "name": "backend_quotes_platform",
+  "version": "1.0.0",
+  "description": "Api para una plataforma de cotizaciones SaaS, construida en express.js",
+  "main": "index.js",
+  
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
