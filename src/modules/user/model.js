@@ -1,23 +1,21 @@
 // model.js
-const mongoose = require('mongoose');
+const pool = require('../../config/database');
 
-const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true
-    }
-});
+function getUsers() {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT * FROM users', (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
 
-const User = mongoose.model('User', userSchema);
+// Implementar otros métodos de CRUD según sea necesario...
 
-module.exports = User;
+module.exports = {
+    getUsers,
+    // Otros métodos...
+};
