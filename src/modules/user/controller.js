@@ -1,58 +1,41 @@
-// controller.js
-const userService = require('./service');
+const userService = require('../user/service');
 
-async function createUser(req, res) {
+const userController = {
+  createUser: async (req, res, next) => {
     try {
-        const user = await userService.createUser(req.body);
-        res.status(201).json(user);
+      const userId = await userService.createUser(req.body);
+      res.status(201).json({ userId });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      next(error);
     }
-}
-
-async function getUsers(req, res) {
+  },
+  getUserById: async (req, res, next) => {
     try {
-        const users = await userService.getUsers();
-        res.json(users);
+      const { userId } = req.params;
+      const user = await userService.getUserById(userId);
+      res.json(user);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      next(error);
     }
-}
-
-async function getUserById(req, res) {
+  },
+  updateUserById: async (req, res, next) => {
     try {
-        const user = await userService.getUserById(req.params.id);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        res.json(user);
+      const { userId } = req.params;
+      await userService.updateUserById(userId, req.body);
+      res.sendStatus(204);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      next(error);
     }
-}
-
-async function updateUser(req, res) {
+  },
+  deleteUserById: async (req, res, next) => {
     try {
-        const user = await userService.updateUser(req.params.id, req.body);
-        res.json(user);
+      const { userId } = req.params;
+      await userService.deleteUserById(userId);
+      res.sendStatus(204);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      next(error);
     }
-}
-
-async function deleteUser(req, res) {
-    try {
-        await userService.deleteUser(req.params.id);
-        res.json({ message: 'User deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
-
-module.exports = {
-    createUser,
-    getUsers,
-    getUserById,
-    updateUser,
-    deleteUser
+  }
 };
+
+module.exports = userController;

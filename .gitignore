@@ -5,13 +5,7 @@ node_modules/
 logs/
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+
 
 # Archivos de configuración locales
 .env
-
-
-# Archivos de respaldo y temporales
-*.swp
-*~
