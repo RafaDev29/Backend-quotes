@@ -4,9 +4,6 @@ const userService = require('./service');
 exports.createUser = (req, res) => {
   const { nombre, contraseña } = req.body;
 
-
-  // Si el campo rol no se proporciona en el cuerpo de la solicitud, establecerlo automáticamente en 2
-  
   // Validar que se proporcionen todas las propiedades requeridas y no existan propiedades no deseadas
   if (!nombre || !contraseña || Object.keys(req.body).length !== 2) {
       return res.status(400).json({ message: "El cuerpo de la solicitud debe contener solo 'nombre', 'contraseña' e 'rol'.", status: false });
@@ -21,9 +18,6 @@ exports.createUser = (req, res) => {
   if (nombre.length < 3 || nombre.length > 50 || contraseña.length < 6 || contraseña.length > 50) {
       return res.status(400).json({ message: "Longitud inválida para nombre o contraseña.", status: false });
   }
-
-
-
   // Transformar el cuerpo de la solicitud
   const transformedBody = {
       name: nombre,
