@@ -1,9 +1,6 @@
-// app.js
 const express = require('express');
 const bodyParser = require('body-parser');
-require('dotenv').config(); //para utilizar .env
-
-const fs = require('fs');
+require('dotenv').config(); // para utilizar .env
 const path = require('path');
 
 const app = express();
@@ -12,23 +9,24 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Importar las rutas de todas las entidades
-const modulesDir = path.join(__dirname, 'src', 'modules');
-const modules = fs.readdirSync(modulesDir);
+// Middleware para formatear la respuesta
+const formatResponse = require('./src/middleware/formatResponse');
+app.use(formatResponse);
 
-modules.forEach(moduleName => {
-    const moduleRoutesPath = path.join(modulesDir, moduleName, 'route.js');
-    if (fs.existsSync(moduleRoutesPath)) {
-        const moduleRoutes = require(moduleRoutesPath);
-        app.use('/', moduleRoutes);
-    }
+// Importar las rutas de todos los módulos
+const userRoutes = require('./src/modules/user/route');
+// Importa más rutas si es necesario para otros módulos
+
+// Montar las rutas en la aplicación
+app.use('/api', userRoutes);
+// Monta más rutas si es necesario para otros módulos
+
+// Middleware de registro adicional
+app.use((req, res, next) => {
+    console.log("Request received:", req.method, req.url);
+    next();
 });
 
-// Manejo de errores
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
-});
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 3000;
