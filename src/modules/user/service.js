@@ -48,52 +48,89 @@ exports.createUser = (userData) => {
 
 // Obtener todos los usuarios
 exports.getAllUsers = () => {
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM tb_user';
-        db.query(sql, (err, results) => {
-            if (err) {
-                return reject(err);
-            }
-            resolve(results);
-        });
-    });
+  return new Promise((resolve, reject) => {
+      const sql = 'SELECT * FROM tb_user';
+      db.query(sql, (err, results) => {
+          if (err) {
+              // En caso de error, rechaza la promesa con un mensaje de error
+              return reject({ message: 'Error al obtener usuarios', status: false });
+          }
+          // Si la consulta fue exitosa, devuelve un objeto con el resultado y un mensaje de éxito
+          resolve({ message: 'Usuarios obtenidos correctamente', data: results, status: true });
+      });
+  });
 };
+
 
 // Obtener un usuario por su ID
 exports.getUserById = (userId) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM tb_user WHERE id = ?';
-        db.query(sql, userId, (err, result) => {
-            if (err) {
-                return reject(err);
-            }
-            resolve(result[0]);
-        });
-    });
+  return new Promise((resolve, reject) => {
+      const sql = 'SELECT * FROM tb_user WHERE id = ?';
+      db.query(sql, userId, (err, result) => {
+          if (err) {
+              // En caso de error al realizar la consulta, rechazar la promesa con un objeto de error
+              return reject({ message: 'Error al obtener usuario por ID', status: false });
+          }
+          // Si se encontró el usuario, resolver la promesa con un objeto que contenga los datos del usuario
+          if (result.length > 0) {
+              resolve({ data: result[0], message: 'Usuario encontrado', status: true });
+          } else {
+              // Si no se encontró el usuario, resolver la promesa con un mensaje indicando que no se encontró
+              resolve({ message: 'Usuario no encontrado', status: false });
+          }
+      });
+  });
 };
-
+// Actualizar un usuario por su ID
 // Actualizar un usuario por su ID
 exports.updateUser = (userId, userData) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'UPDATE tb_user SET ? WHERE id = ?';
-        db.query(sql, [userData, userId], (err, result) => {
-            if (err) {
-                return reject(err);
-            }
-            resolve(result);
-        });
-    });
+  return new Promise((resolve, reject) => {
+      // Primero, verifica si el usuario existe
+      const checkUserQuery = 'SELECT * FROM tb_user WHERE id = ?';
+      db.query(checkUserQuery, userId, (err, existingUser) => {
+          if (err) {
+              return reject(err);
+          }
+
+          // Si el usuario no existe, devuelve un mensaje de error
+          if (existingUser.length === 0) {
+              return resolve({ message: 'Usuario no encontrado', status: false });
+          }
+
+          // Si el usuario existe, procede con la actualización
+          const updateUserQuery = 'UPDATE tb_user SET ? WHERE id = ?';
+          db.query(updateUserQuery, [userData, userId], (err, result) => {
+              if (err) {
+                  return reject(err);
+              }
+              resolve({ message: 'Usuario actualizado exitosamente', data: userData, status: true });
+          });
+      });
+  });
 };
+
+
+
 
 // Eliminar un usuario por su ID
 exports.deleteUser = (userId) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'DELETE FROM tb_user WHERE id = ?';
-        db.query(sql, userId, (err, result) => {
-            if (err) {
-                return reject(err);
-            }
-            resolve(result);
-        });
-    });
+  return new Promise((resolve, reject) => {
+      const getUserQuery = 'SELECT name FROM tb_user WHERE id = ?';
+      db.query(getUserQuery, userId, (err, userData) => {
+          if (err) {
+              return reject(err);
+          }
+          if (userData.length === 0) {
+              return resolve({ message: "Usuario no encontrado", status: false });
+          }
+          const userName = userData[0].name;
+          const deleteUserQuery = 'DELETE FROM tb_user WHERE id = ?';
+          db.query(deleteUserQuery, userId, (err, result) => {
+              if (err) {
+                  return reject(err);
+              }
+              resolve({ message: "Usuario eliminado exitosamente", data: { usuario: userName }, status: true });
+          });
+      });
+  });
 };

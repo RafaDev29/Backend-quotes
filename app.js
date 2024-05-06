@@ -18,7 +18,7 @@ const userRoutes = require('./src/modules/user/route');
 // Importa más rutas si es necesario para otros módulos
 
 // Montar las rutas en la aplicación
-app.use('/api', userRoutes);
+app.use('/api/user', userRoutes);
 // Monta más rutas si es necesario para otros módulos
 
 // Middleware de registro adicional
