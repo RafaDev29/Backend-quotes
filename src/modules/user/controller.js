@@ -6,7 +6,7 @@ exports.createUser = (req, res) => {
 
   // Validar que se proporcionen todas las propiedades requeridas y no existan propiedades no deseadas
   if (!nombre || !contraseña || Object.keys(req.body).length !== 2) {
-      return res.status(400).json({ message: "El cuerpo de la solicitud debe contener solo 'nombre', 'contraseña' e 'rol'.", status: false });
+      return res.status(400).json({ message: "El cuerpo de la solicitud debe contener solo 'nombre', 'contraseña'", status: false });
   }
 
   // Validar el tipo de datos de las propiedades
