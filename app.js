@@ -15,11 +15,14 @@ app.use(formatResponse);
 
 // Importar las rutas de todos los módulos
 const userRoutes = require('./src/modules/user/route');
+const vendorRoutes = require('./src/modules/vendor/route');
+
+
 // Importa más rutas si es necesario para otros módulos
 
 // Montar las rutas en la aplicación
 app.use('/api/user', userRoutes);
-
+app.use('/api/vendor', vendorRoutes);
 
 // Middleware de registro adicional
 app.use((req, res, next) => {
